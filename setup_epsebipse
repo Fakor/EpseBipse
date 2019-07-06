@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+EPSE_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+EPSE_HOME=$HOME/.epsebipse_home
+VIRTUAL_ENV_HOME=$EPSE_HOME/venv
+BIN_PATH=/usr/local/bin/epse
+CONFIG_PATH=$EPSE_HOME/config
+
+rm -rf $VIRTUAL_ENV_HOME
+
+python -m venv $VIRTUAL_ENV_HOME
+source $VIRTUAL_ENV_HOME/bin/activate
+
+pip install -r requirements.txt
+
+cp configs/default.json $CONFIG_PATH
+
+echo "#!/bin/bash" > $BIN_PATH
+echo "source $VIRTUAL_ENV_HOME/bin/activate" >> $BIN_PATH
+echo "python  $EPSE_PATH/epsebipse/epsebipse.py $EPSE_PATH $CONFIG_PATH" >> $BIN_PATH
+
+chmod 755 $BIN_PATH
